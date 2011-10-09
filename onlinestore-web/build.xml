@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project><project name="onlinestore" default="war">
+	<property file="build.properties"> </property>
+	<target name="init">
+			<mkdir dir="build/classes"/>
+			<mkdir dir="${dist.dir}" />
+		</target>
+	
+	<path id="compile.classpath">
+		<fileset dir="WebContent/WEB-INF/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	
+	
+	<target name="compile" depends="init" >
+		<javac destdir="build/classes" debug="true" srcdir="src">
+			<classpath refid="compile.classpath"/>
+		</javac>
+	</target>
+	
+	<target name="war" depends="compile">
+		<war destfile="${dist.dir}/${war.name}.war" webxml="WebContent/WEB-INF/web.xml">
+			<fileset dir="WebContent"/>
+			<lib dir="WebContent/WEB-INF/lib"/>
+			<classes dir="build/classes"/>
+		</war>
+	</target>
+	
+	<target name="clean">
+		<delete dir="dist" />
+		<delete dir="build" />
+	</target>
+	
+	<target name="deploy" depends="war">
+			<delete includeemptydirs="true" failonerror="false">
+				<fileset dir="${deploy.dir}/${war.name}"/>
+			</delete>	
+			<copy todir="${deploy.dir}">
+				<fileset dir="dist" includes="*.war/**"/>
+			</copy>
+	</target>
+	
+</project>
+
